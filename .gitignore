@@ -1,0 +1,14 @@
+node_modules/
+dist/
+.venv/
+__pycache__/
+*.db
+.env
+.env.local
+.dart_tool/
+build/
+*.log
+.idea/
+.vscode/
+coverage/
+*.apk
