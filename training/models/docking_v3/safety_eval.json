@@ -1,0 +1,1544 @@
+{
+  "requirement": "AI-06: every policy command passes the safety supervisor (0.1 m/s, ToF) before the ESP32",
+  "model": "models/docking_v3/policy.onnx (onnxruntime, CPU)",
+  "seeds": "10000-10999",
+  "layers": {
+    "jetson": "code/ros2_ws/src/forklift_safety/forklift_safety/safety_core.py (imported as is)",
+    "esp32": "forklift_rl/firmware_limiter.py (port of lib/forklift_core, checked against the C++ in tests/test_firmware_limiter.py)"
+  },
+  "docking_masks": {
+    "firmware": "SF-03 ignores all three front ToF sensors while docking (config.h TOF_MASK_DOCKING_IGNORE, fixed after this evaluation found the centre-only mask blocked every docking)",
+    "centre_only": "HISTORY: the original mask, centre front ToF only \u2014 blocked 99.5 % of dockings",
+    "front_all+stop@0.02": "front_all + PROPOSED rule (not on the robot): while docking, hard stop when a front-corner ToF reads < 0.02 m (forks fully in / mast at the rack)"
+  },
+  "proposed_docking_stop": {
+    "chosen_m": 0.02,
+    "chosen_on": "validation seeds 20000-20399",
+    "rule": "max(success - 2*collision), policy + baseline",
+    "candidates": {
+      "0.015": {
+        "policy": {
+          "success_rate": 0.995,
+          "collision_rate": 0.005,
+          "safety_abort_rate": 0.0
+        },
+        "baseline": {
+          "success_rate": 0.8625,
+          "collision_rate": 0.0,
+          "safety_abort_rate": 0.0
+        }
+      },
+      "0.02": {
+        "policy": {
+          "success_rate": 0.995,
+          "collision_rate": 0.005,
+          "safety_abort_rate": 0.0
+        },
+        "baseline": {
+          "success_rate": 0.8625,
+          "collision_rate": 0.0,
+          "safety_abort_rate": 0.0
+        }
+      },
+      "0.025": {
+        "policy": {
+          "success_rate": 0.9925,
+          "collision_rate": 0.005,
+          "safety_abort_rate": 0.0025
+        },
+        "baseline": {
+          "success_rate": 0.8625,
+          "collision_rate": 0.0,
+          "safety_abort_rate": 0.0
+        }
+      },
+      "0.03": {
+        "policy": {
+          "success_rate": 0.985,
+          "collision_rate": 0.0025,
+          "safety_abort_rate": 0.0125
+        },
+        "baseline": {
+          "success_rate": 0.855,
+          "collision_rate": 0.0,
+          "safety_abort_rate": 0.0075
+        }
+      },
+      "0.04": {
+        "policy": {
+          "success_rate": 0.615,
+          "collision_rate": 0.0,
+          "safety_abort_rate": 0.3825
+        },
+        "baseline": {
+          "success_rate": 0.47,
+          "collision_rate": 0.0,
+          "safety_abort_rate": 0.18
+        }
+      }
+    }
+  },
+  "abort_after_s": 3.0,
+  "nominal": {
+    "policy": {
+      "episodes": 1000,
+      "success_rate": 0.986,
+      "collision_rate": 0.014,
+      "timeout_rate": 0.0,
+      "safety_abort_rate": 0.0,
+      "out_of_range_rate": 0.0,
+      "mean_time_s": 6.410141987829614,
+      "mean_lateral_mm": 2.7465408854497433,
+      "collision_causes": {
+        "backrest->deck": 9,
+        "mast_r->shelf": 3,
+        "mast_l->shelf": 1,
+        "fork_r->str_c": 1
+      }
+    },
+    "policy+supervisor[centre_only]": {
+      "episodes": 1000,
+      "success_rate": 0.0,
+      "collision_rate": 0.001,
+      "timeout_rate": 0.004,
+      "safety_abort_rate": 0.995,
+      "out_of_range_rate": 0.0,
+      "mean_time_s": null,
+      "mean_lateral_mm": null,
+      "interventions": {
+        "proposed_docking_stop": {
+          "episodes": 0,
+          "steps": 0
+        },
+        "jetson_tof_stop": {
+          "episodes": 999,
+          "steps": 70271
+        },
+        "jetson_tof_slow": {
+          "episodes": 1000,
+          "steps": 50944
+        },
+        "jetson_docking_cap": {
+          "episodes": 0,
+          "steps": 0
+        },
+        "jetson_fork_cap": {
+          "episodes": 0,
+          "steps": 0
+        },
+        "jetson_ramp": {
+          "episodes": 1000,
+          "steps": 3691
+        },
+        "esp32_tof_stop": {
+          "episodes": 0,
+          "steps": 0
+        },
+        "esp32_tof_slow": {
+          "episodes": 0,
+          "steps": 0
+        },
+        "esp32_docking_cap": {
+          "episodes": 0,
+          "steps": 0
+        },
+        "esp32_fork_cap": {
+          "episodes": 0,
+          "steps": 0
+        },
+        "esp32_ramp": {
+          "episodes": 0,
+          "steps": 0
+        }
+      },
+      "modified_step_share": 0.6965301064295086,
+      "collision_causes": {
+        "fork_r->str_c": 1
+      }
+    },
+    "policy+supervisor[firmware]": {
+      "episodes": 1000,
+      "success_rate": 0.987,
+      "collision_rate": 0.013,
+      "timeout_rate": 0.0,
+      "safety_abort_rate": 0.0,
+      "out_of_range_rate": 0.0,
+      "mean_time_s": 6.483789260385005,
+      "mean_lateral_mm": 2.7367098770345235,
+      "interventions": {
+        "proposed_docking_stop": {
+          "episodes": 0,
+          "steps": 0
+        },
+        "jetson_tof_stop": {
+          "episodes": 0,
+          "steps": 0
+        },
+        "jetson_tof_slow": {
+          "episodes": 0,
+          "steps": 0
+        },
+        "jetson_docking_cap": {
+          "episodes": 0,
+          "steps": 0
+        },
+        "jetson_fork_cap": {
+          "episodes": 0,
+          "steps": 0
+        },
+        "jetson_ramp": {
+          "episodes": 1000,
+          "steps": 3000
+        },
+        "esp32_tof_stop": {
+          "episodes": 0,
+          "steps": 0
+        },
+        "esp32_tof_slow": {
+          "episodes": 0,
+          "steps": 0
+        },
+        "esp32_docking_cap": {
+          "episodes": 0,
+          "steps": 0
+        },
+        "esp32_fork_cap": {
+          "episodes": 0,
+          "steps": 0
+        },
+        "esp32_ramp": {
+          "episodes": 0,
+          "steps": 0
+        }
+      },
+      "modified_step_share": 0.02318141777551115,
+      "collision_causes": {
+        "backrest->deck": 7,
+        "mast_r->shelf": 4,
+        "mast_l->shelf": 1,
+        "fork_r->str_c": 1
+      }
+    },
+    "policy+supervisor[front_all+stop@0.02]": {
+      "episodes": 1000,
+      "success_rate": 0.987,
+      "collision_rate": 0.008,
+      "timeout_rate": 0.0,
+      "safety_abort_rate": 0.005,
+      "out_of_range_rate": 0.0,
+      "mean_time_s": 6.483789260385005,
+      "mean_lateral_mm": 2.7370404279231892,
+      "interventions": {
+        "proposed_docking_stop": {
+          "episodes": 98,
+          "steps": 606
+        },
+        "jetson_tof_stop": {
+          "episodes": 0,
+          "steps": 0
+        },
+        "jetson_tof_slow": {
+          "episodes": 0,
+          "steps": 0
+        },
+        "jetson_docking_cap": {
+          "episodes": 0,
+          "steps": 0
+        },
+        "jetson_fork_cap": {
+          "episodes": 0,
+          "steps": 0
+        },
+        "jetson_ramp": {
+          "episodes": 1000,
+          "steps": 3540
+        },
+        "esp32_tof_stop": {
+          "episodes": 0,
+          "steps": 0
+        },
+        "esp32_tof_slow": {
+          "episodes": 0,
+          "steps": 0
+        },
+        "esp32_docking_cap": {
+          "episodes": 0,
+          "steps": 0
+        },
+        "esp32_fork_cap": {
+          "episodes": 0,
+          "steps": 0
+        },
+        "esp32_ramp": {
+          "episodes": 0,
+          "steps": 0
+        }
+      },
+      "modified_step_share": 0.02800572739449739,
+      "collision_causes": {
+        "backrest->deck": 7,
+        "fork_r->str_c": 1
+      }
+    },
+    "baseline": {
+      "episodes": 1000,
+      "success_rate": 0.9,
+      "collision_rate": 0.0,
+      "timeout_rate": 0.1,
+      "safety_abort_rate": 0.0,
+      "out_of_range_rate": 0.0,
+      "mean_time_s": 10.3025,
+      "mean_lateral_mm": 1.6727874756589176
+    },
+    "baseline+supervisor[centre_only]": {
+      "episodes": 1000,
+      "success_rate": 0.0,
+      "collision_rate": 0.0,
+      "timeout_rate": 0.254,
+      "safety_abort_rate": 0.746,
+      "out_of_range_rate": 0.0,
+      "mean_time_s": null,
+      "mean_lateral_mm": null,
+      "interventions": {
+        "proposed_docking_stop": {
+          "episodes": 0,
+          "steps": 0
+        },
+        "jetson_tof_stop": {
+          "episodes": 906,
+          "steps": 87987
+        },
+        "jetson_tof_slow": {
+          "episodes": 899,
+          "steps": 17615
+        },
+        "jetson_docking_cap": {
+          "episodes": 0,
+          "steps": 0
+        },
+        "jetson_fork_cap": {
+          "episodes": 0,
+          "steps": 0
+        },
+        "jetson_ramp": {
+          "episodes": 1000,
+          "steps": 8713
+        },
+        "esp32_tof_stop": {
+          "episodes": 0,
+          "steps": 0
+        },
+        "esp32_tof_slow": {
+          "episodes": 0,
+          "steps": 0
+        },
+        "esp32_docking_cap": {
+          "episodes": 0,
+          "steps": 0
+        },
+        "esp32_fork_cap": {
+          "episodes": 0,
+          "steps": 0
+        },
+        "esp32_ramp": {
+          "episodes": 0,
+          "steps": 0
+        }
+      },
+      "modified_step_share": 0.445488049023194
+    },
+    "baseline+supervisor[firmware]": {
+      "episodes": 1000,
+      "success_rate": 0.897,
+      "collision_rate": 0.0,
+      "timeout_rate": 0.103,
+      "safety_abort_rate": 0.0,
+      "out_of_range_rate": 0.0,
+      "mean_time_s": 10.323021181716834,
+      "mean_lateral_mm": 1.6829775520890895,
+      "interventions": {
+        "proposed_docking_stop": {
+          "episodes": 0,
+          "steps": 0
+        },
+        "jetson_tof_stop": {
+          "episodes": 0,
+          "steps": 0
+        },
+        "jetson_tof_slow": {
+          "episodes": 0,
+          "steps": 0
+        },
+        "jetson_docking_cap": {
+          "episodes": 0,
+          "steps": 0
+        },
+        "jetson_fork_cap": {
+          "episodes": 0,
+          "steps": 0
+        },
+        "jetson_ramp": {
+          "episodes": 1000,
+          "steps": 5721
+        },
+        "esp32_tof_stop": {
+          "episodes": 0,
+          "steps": 0
+        },
+        "esp32_tof_slow": {
+          "episodes": 0,
+          "steps": 0
+        },
+        "esp32_docking_cap": {
+          "episodes": 0,
+          "steps": 0
+        },
+        "esp32_fork_cap": {
+          "episodes": 0,
+          "steps": 0
+        },
+        "esp32_ramp": {
+          "episodes": 0,
+          "steps": 0
+        }
+      },
+      "modified_step_share": 0.028015456165112567
+    },
+    "baseline+supervisor[front_all+stop@0.02]": {
+      "episodes": 1000,
+      "success_rate": 0.897,
+      "collision_rate": 0.0,
+      "timeout_rate": 0.103,
+      "safety_abort_rate": 0.0,
+      "out_of_range_rate": 0.0,
+      "mean_time_s": 10.324136008918618,
+      "mean_lateral_mm": 1.6827261077215616,
+      "interventions": {
+        "proposed_docking_stop": {
+          "episodes": 122,
+          "steps": 132
+        },
+        "jetson_tof_stop": {
+          "episodes": 0,
+          "steps": 0
+        },
+        "jetson_tof_slow": {
+          "episodes": 0,
+          "steps": 0
+        },
+        "jetson_docking_cap": {
+          "episodes": 0,
+          "steps": 0
+        },
+        "jetson_fork_cap": {
+          "episodes": 0,
+          "steps": 0
+        },
+        "jetson_ramp": {
+          "episodes": 1000,
+          "steps": 5769
+        },
+        "esp32_tof_stop": {
+          "episodes": 0,
+          "steps": 0
+        },
+        "esp32_tof_slow": {
+          "episodes": 0,
+          "steps": 0
+        },
+        "esp32_docking_cap": {
+          "episodes": 0,
+          "steps": 0
+        },
+        "esp32_fork_cap": {
+          "episodes": 0,
+          "steps": 0
+        },
+        "esp32_ramp": {
+          "episodes": 0,
+          "steps": 0
+        }
+      },
+      "modified_step_share": 0.02881799042176619
+    }
+  },
+  "paired": {
+    "policy: supervisor[centre_only] vs alone": {
+      "alone_collisions": 14,
+      "collisions_prevented": 13,
+      "collisions_turned_into_success": 0,
+      "outcome_of_alone_collisions": {
+        "aborted": 13,
+        "collision": 1
+      },
+      "alone_successes": 986,
+      "successes_lost": 986,
+      "outcome_of_alone_successes": {
+        "aborted": 982,
+        "timeout": 4
+      },
+      "new_collisions": 0,
+      "new_timeouts_or_aborts": 999,
+      "collision_seeds_alone": [
+        10123,
+        10124,
+        10296,
+        10302,
+        10451,
+        10633,
+        10640,
+        10650,
+        10693,
+        10724,
+        10840,
+        10852,
+        10971,
+        10996
+      ]
+    },
+    "policy: supervisor[firmware] vs alone": {
+      "alone_collisions": 14,
+      "collisions_prevented": 3,
+      "collisions_turned_into_success": 3,
+      "outcome_of_alone_collisions": {
+        "collision": 11,
+        "success": 3
+      },
+      "alone_successes": 986,
+      "successes_lost": 2,
+      "outcome_of_alone_successes": {
+        "success": 984,
+        "collision": 2
+      },
+      "new_collisions": 2,
+      "new_timeouts_or_aborts": 0,
+      "collision_seeds_alone": [
+        10123,
+        10124,
+        10296,
+        10302,
+        10451,
+        10633,
+        10640,
+        10650,
+        10693,
+        10724,
+        10840,
+        10852,
+        10971,
+        10996
+      ]
+    },
+    "policy: supervisor[front_all+stop@0.02] vs alone": {
+      "alone_collisions": 14,
+      "collisions_prevented": 7,
+      "collisions_turned_into_success": 3,
+      "outcome_of_alone_collisions": {
+        "collision": 7,
+        "aborted": 4,
+        "success": 3
+      },
+      "alone_successes": 986,
+      "successes_lost": 2,
+      "outcome_of_alone_successes": {
+        "success": 984,
+        "aborted": 1,
+        "collision": 1
+      },
+      "new_collisions": 1,
+      "new_timeouts_or_aborts": 5,
+      "collision_seeds_alone": [
+        10123,
+        10124,
+        10296,
+        10302,
+        10451,
+        10633,
+        10640,
+        10650,
+        10693,
+        10724,
+        10840,
+        10852,
+        10971,
+        10996
+      ]
+    },
+    "baseline: supervisor[centre_only] vs alone": {
+      "alone_collisions": 0,
+      "collisions_prevented": 0,
+      "collisions_turned_into_success": 0,
+      "outcome_of_alone_collisions": {},
+      "alone_successes": 900,
+      "successes_lost": 900,
+      "outcome_of_alone_successes": {
+        "aborted": 743,
+        "timeout": 157
+      },
+      "new_collisions": 0,
+      "new_timeouts_or_aborts": 900,
+      "collision_seeds_alone": []
+    },
+    "baseline: supervisor[firmware] vs alone": {
+      "alone_collisions": 0,
+      "collisions_prevented": 0,
+      "collisions_turned_into_success": 0,
+      "outcome_of_alone_collisions": {},
+      "alone_successes": 900,
+      "successes_lost": 6,
+      "outcome_of_alone_successes": {
+        "success": 894,
+        "timeout": 6
+      },
+      "new_collisions": 0,
+      "new_timeouts_or_aborts": 6,
+      "collision_seeds_alone": []
+    },
+    "baseline: supervisor[front_all+stop@0.02] vs alone": {
+      "alone_collisions": 0,
+      "collisions_prevented": 0,
+      "collisions_turned_into_success": 0,
+      "outcome_of_alone_collisions": {},
+      "alone_successes": 900,
+      "successes_lost": 6,
+      "outcome_of_alone_successes": {
+        "success": 894,
+        "timeout": 6
+      },
+      "new_collisions": 0,
+      "new_timeouts_or_aborts": 6,
+      "collision_seeds_alone": []
+    }
+  },
+  "stress": {
+    "marker_noise_x2": {
+      "policy": {
+        "episodes": 1000,
+        "success_rate": 0.954,
+        "collision_rate": 0.046,
+        "timeout_rate": 0.0,
+        "safety_abort_rate": 0.0,
+        "out_of_range_rate": 0.0,
+        "mean_time_s": 6.43825995807128,
+        "mean_lateral_mm": 3.678187991898132,
+        "collision_causes": {
+          "backrest->deck": 25,
+          "mast_r->shelf": 10,
+          "mast_l->shelf": 7,
+          "fork_r->str_c": 4
+        }
+      },
+      "policy+supervisor[front_all]": {
+        "episodes": 1000,
+        "success_rate": 0.959,
+        "collision_rate": 0.041,
+        "timeout_rate": 0.0,
+        "safety_abort_rate": 0.0,
+        "out_of_range_rate": 0.0,
+        "mean_time_s": 6.507455683003128,
+        "mean_lateral_mm": 3.7087865985734703,
+        "interventions": {
+          "proposed_docking_stop": {
+            "episodes": 0,
+            "steps": 0
+          },
+          "jetson_tof_stop": {
+            "episodes": 0,
+            "steps": 0
+          },
+          "jetson_tof_slow": {
+            "episodes": 0,
+            "steps": 0
+          },
+          "jetson_docking_cap": {
+            "episodes": 0,
+            "steps": 0
+          },
+          "jetson_fork_cap": {
+            "episodes": 0,
+            "steps": 0
+          },
+          "jetson_ramp": {
+            "episodes": 1000,
+            "steps": 3000
+          },
+          "esp32_tof_stop": {
+            "episodes": 0,
+            "steps": 0
+          },
+          "esp32_tof_slow": {
+            "episodes": 0,
+            "steps": 0
+          },
+          "esp32_docking_cap": {
+            "episodes": 0,
+            "steps": 0
+          },
+          "esp32_fork_cap": {
+            "episodes": 0,
+            "steps": 0
+          },
+          "esp32_ramp": {
+            "episodes": 0,
+            "steps": 0
+          }
+        },
+        "modified_step_share": 0.023169601482854494,
+        "collision_causes": {
+          "backrest->deck": 20,
+          "mast_r->shelf": 8,
+          "mast_l->shelf": 7,
+          "fork_r->str_c": 6
+        }
+      },
+      "policy+supervisor[front_all+stop@0.02]": {
+        "episodes": 1000,
+        "success_rate": 0.956,
+        "collision_rate": 0.025,
+        "timeout_rate": 0.0,
+        "safety_abort_rate": 0.019,
+        "out_of_range_rate": 0.0,
+        "mean_time_s": 6.510407949790794,
+        "mean_lateral_mm": 3.7005232576470406,
+        "interventions": {
+          "proposed_docking_stop": {
+            "episodes": 113,
+            "steps": 1487
+          },
+          "jetson_tof_stop": {
+            "episodes": 0,
+            "steps": 0
+          },
+          "jetson_tof_slow": {
+            "episodes": 0,
+            "steps": 0
+          },
+          "jetson_docking_cap": {
+            "episodes": 0,
+            "steps": 0
+          },
+          "jetson_fork_cap": {
+            "episodes": 0,
+            "steps": 0
+          },
+          "jetson_ramp": {
+            "episodes": 1000,
+            "steps": 4429
+          },
+          "esp32_tof_stop": {
+            "episodes": 0,
+            "steps": 0
+          },
+          "esp32_tof_slow": {
+            "episodes": 0,
+            "steps": 0
+          },
+          "esp32_docking_cap": {
+            "episodes": 0,
+            "steps": 0
+          },
+          "esp32_fork_cap": {
+            "episodes": 0,
+            "steps": 0
+          },
+          "esp32_ramp": {
+            "episodes": 0,
+            "steps": 0
+          }
+        },
+        "modified_step_share": 0.03473666503547835,
+        "collision_causes": {
+          "backrest->deck": 20,
+          "fork_r->str_c": 5
+        }
+      },
+      "paired": {
+        "alone_collisions": 46,
+        "collisions_prevented": 6,
+        "collisions_turned_into_success": 6,
+        "outcome_of_alone_collisions": {
+          "collision": 40,
+          "success": 6
+        },
+        "alone_successes": 954,
+        "successes_lost": 1,
+        "outcome_of_alone_successes": {
+          "success": 953,
+          "collision": 1
+        },
+        "new_collisions": 1,
+        "new_timeouts_or_aborts": 0,
+        "collision_seeds_alone": [
+          10024,
+          10027,
+          10028,
+          10045,
+          10069,
+          10114,
+          10123,
+          10124,
+          10141,
+          10181,
+          10280,
+          10296,
+          10302,
+          10320,
+          10428,
+          10451,
+          10465,
+          10497,
+          10501,
+          10517,
+          10524,
+          10607,
+          10608,
+          10610,
+          10612,
+          10618,
+          10633,
+          10635,
+          10640,
+          10643,
+          10650,
+          10651,
+          10687,
+          10693,
+          10724,
+          10753,
+          10822,
+          10836,
+          10840,
+          10847,
+          10852,
+          10886,
+          10890,
+          10938,
+          10971,
+          10996
+        ]
+      },
+      "paired_proposal": {
+        "alone_collisions": 46,
+        "collisions_prevented": 22,
+        "collisions_turned_into_success": 5,
+        "outcome_of_alone_collisions": {
+          "collision": 24,
+          "success": 5,
+          "aborted": 17
+        },
+        "alone_successes": 954,
+        "successes_lost": 3,
+        "outcome_of_alone_successes": {
+          "success": 951,
+          "collision": 1,
+          "aborted": 2
+        },
+        "new_collisions": 1,
+        "new_timeouts_or_aborts": 19,
+        "collision_seeds_alone": [
+          10024,
+          10027,
+          10028,
+          10045,
+          10069,
+          10114,
+          10123,
+          10124,
+          10141,
+          10181,
+          10280,
+          10296,
+          10302,
+          10320,
+          10428,
+          10451,
+          10465,
+          10497,
+          10501,
+          10517,
+          10524,
+          10607,
+          10608,
+          10610,
+          10612,
+          10618,
+          10633,
+          10635,
+          10640,
+          10643,
+          10650,
+          10651,
+          10687,
+          10693,
+          10724,
+          10753,
+          10822,
+          10836,
+          10840,
+          10847,
+          10852,
+          10886,
+          10890,
+          10938,
+          10971,
+          10996
+        ]
+      }
+    },
+    "motor_delay_120ms": {
+      "policy": {
+        "episodes": 1000,
+        "success_rate": 0.99,
+        "collision_rate": 0.01,
+        "timeout_rate": 0.0,
+        "safety_abort_rate": 0.0,
+        "out_of_range_rate": 0.0,
+        "mean_time_s": 6.466717171717171,
+        "mean_lateral_mm": 2.693560746886983,
+        "collision_causes": {
+          "backrest->deck": 7,
+          "mast_r->shelf": 2,
+          "fork_r->str_c": 1
+        }
+      },
+      "policy+supervisor[front_all]": {
+        "episodes": 1000,
+        "success_rate": 0.991,
+        "collision_rate": 0.009,
+        "timeout_rate": 0.0,
+        "safety_abort_rate": 0.0,
+        "out_of_range_rate": 0.0,
+        "mean_time_s": 6.541120080726539,
+        "mean_lateral_mm": 2.68837543216913,
+        "interventions": {
+          "proposed_docking_stop": {
+            "episodes": 0,
+            "steps": 0
+          },
+          "jetson_tof_stop": {
+            "episodes": 0,
+            "steps": 0
+          },
+          "jetson_tof_slow": {
+            "episodes": 0,
+            "steps": 0
+          },
+          "jetson_docking_cap": {
+            "episodes": 0,
+            "steps": 0
+          },
+          "jetson_fork_cap": {
+            "episodes": 0,
+            "steps": 0
+          },
+          "jetson_ramp": {
+            "episodes": 1000,
+            "steps": 3000
+          },
+          "esp32_tof_stop": {
+            "episodes": 0,
+            "steps": 0
+          },
+          "esp32_tof_slow": {
+            "episodes": 0,
+            "steps": 0
+          },
+          "esp32_docking_cap": {
+            "episodes": 0,
+            "steps": 0
+          },
+          "esp32_fork_cap": {
+            "episodes": 0,
+            "steps": 0
+          },
+          "esp32_ramp": {
+            "episodes": 0,
+            "steps": 0
+          }
+        },
+        "modified_step_share": 0.022971255302531433,
+        "collision_causes": {
+          "backrest->deck": 5,
+          "fork_r->str_c": 2,
+          "mast_r->shelf": 2
+        }
+      },
+      "policy+supervisor[front_all+stop@0.02]": {
+        "episodes": 1000,
+        "success_rate": 0.991,
+        "collision_rate": 0.008,
+        "timeout_rate": 0.0,
+        "safety_abort_rate": 0.001,
+        "out_of_range_rate": 0.0,
+        "mean_time_s": 6.541120080726539,
+        "mean_lateral_mm": 2.6884157503542947,
+        "interventions": {
+          "proposed_docking_stop": {
+            "episodes": 85,
+            "steps": 157
+          },
+          "jetson_tof_stop": {
+            "episodes": 0,
+            "steps": 0
+          },
+          "jetson_tof_slow": {
+            "episodes": 0,
+            "steps": 0
+          },
+          "jetson_docking_cap": {
+            "episodes": 0,
+            "steps": 0
+          },
+          "jetson_fork_cap": {
+            "episodes": 0,
+            "steps": 0
+          },
+          "jetson_ramp": {
+            "episodes": 1000,
+            "steps": 3089
+          },
+          "esp32_tof_stop": {
+            "episodes": 0,
+            "steps": 0
+          },
+          "esp32_tof_slow": {
+            "episodes": 0,
+            "steps": 0
+          },
+          "esp32_docking_cap": {
+            "episodes": 0,
+            "steps": 0
+          },
+          "esp32_fork_cap": {
+            "episodes": 0,
+            "steps": 0
+          },
+          "esp32_ramp": {
+            "episodes": 0,
+            "steps": 0
+          }
+        },
+        "modified_step_share": 0.024292985343079103,
+        "collision_causes": {
+          "backrest->deck": 5,
+          "fork_r->str_c": 2,
+          "mast_r->shelf": 1
+        }
+      },
+      "paired": {
+        "alone_collisions": 10,
+        "collisions_prevented": 1,
+        "collisions_turned_into_success": 1,
+        "outcome_of_alone_collisions": {
+          "collision": 9,
+          "success": 1
+        },
+        "alone_successes": 990,
+        "successes_lost": 0,
+        "outcome_of_alone_successes": {
+          "success": 990
+        },
+        "new_collisions": 0,
+        "new_timeouts_or_aborts": 0,
+        "collision_seeds_alone": [
+          10123,
+          10296,
+          10302,
+          10451,
+          10640,
+          10650,
+          10693,
+          10724,
+          10840,
+          10996
+        ]
+      },
+      "paired_proposal": {
+        "alone_collisions": 10,
+        "collisions_prevented": 2,
+        "collisions_turned_into_success": 1,
+        "outcome_of_alone_collisions": {
+          "collision": 8,
+          "success": 1,
+          "aborted": 1
+        },
+        "alone_successes": 990,
+        "successes_lost": 0,
+        "outcome_of_alone_successes": {
+          "success": 990
+        },
+        "new_collisions": 0,
+        "new_timeouts_or_aborts": 1,
+        "collision_seeds_alone": [
+          10123,
+          10296,
+          10302,
+          10451,
+          10640,
+          10650,
+          10693,
+          10724,
+          10840,
+          10996
+        ]
+      }
+    },
+    "steer_bias_3deg": {
+      "policy": {
+        "episodes": 1000,
+        "success_rate": 0.966,
+        "collision_rate": 0.034,
+        "timeout_rate": 0.0,
+        "safety_abort_rate": 0.0,
+        "out_of_range_rate": 0.0,
+        "mean_time_s": 6.4297619047619055,
+        "mean_lateral_mm": 3.735327195680531,
+        "collision_causes": {
+          "backrest->deck": 17,
+          "mast_r->shelf": 11,
+          "mast_l->shelf": 6
+        }
+      },
+      "policy+supervisor[front_all]": {
+        "episodes": 1000,
+        "success_rate": 0.964,
+        "collision_rate": 0.036,
+        "timeout_rate": 0.0,
+        "safety_abort_rate": 0.0,
+        "out_of_range_rate": 0.0,
+        "mean_time_s": 6.501192946058092,
+        "mean_lateral_mm": 3.716688665113014,
+        "interventions": {
+          "proposed_docking_stop": {
+            "episodes": 0,
+            "steps": 0
+          },
+          "jetson_tof_stop": {
+            "episodes": 0,
+            "steps": 0
+          },
+          "jetson_tof_slow": {
+            "episodes": 0,
+            "steps": 0
+          },
+          "jetson_docking_cap": {
+            "episodes": 0,
+            "steps": 0
+          },
+          "jetson_fork_cap": {
+            "episodes": 0,
+            "steps": 0
+          },
+          "jetson_ramp": {
+            "episodes": 1000,
+            "steps": 3000
+          },
+          "esp32_tof_stop": {
+            "episodes": 0,
+            "steps": 0
+          },
+          "esp32_tof_slow": {
+            "episodes": 0,
+            "steps": 0
+          },
+          "esp32_docking_cap": {
+            "episodes": 0,
+            "steps": 0
+          },
+          "esp32_fork_cap": {
+            "episodes": 0,
+            "steps": 0
+          },
+          "esp32_ramp": {
+            "episodes": 0,
+            "steps": 0
+          }
+        },
+        "modified_step_share": 0.023145826421732386,
+        "collision_causes": {
+          "backrest->deck": 21,
+          "mast_r->shelf": 10,
+          "mast_l->shelf": 5
+        }
+      },
+      "policy+supervisor[front_all+stop@0.02]": {
+        "episodes": 1000,
+        "success_rate": 0.959,
+        "collision_rate": 0.021,
+        "timeout_rate": 0.0,
+        "safety_abort_rate": 0.02,
+        "out_of_range_rate": 0.0,
+        "mean_time_s": 6.506100104275286,
+        "mean_lateral_mm": 3.703886676390648,
+        "interventions": {
+          "proposed_docking_stop": {
+            "episodes": 126,
+            "steps": 1572
+          },
+          "jetson_tof_stop": {
+            "episodes": 0,
+            "steps": 0
+          },
+          "jetson_tof_slow": {
+            "episodes": 0,
+            "steps": 0
+          },
+          "jetson_docking_cap": {
+            "episodes": 0,
+            "steps": 0
+          },
+          "jetson_fork_cap": {
+            "episodes": 0,
+            "steps": 0
+          },
+          "jetson_ramp": {
+            "episodes": 1000,
+            "steps": 4491
+          },
+          "esp32_tof_stop": {
+            "episodes": 0,
+            "steps": 0
+          },
+          "esp32_tof_slow": {
+            "episodes": 0,
+            "steps": 0
+          },
+          "esp32_docking_cap": {
+            "episodes": 0,
+            "steps": 0
+          },
+          "esp32_fork_cap": {
+            "episodes": 0,
+            "steps": 0
+          },
+          "esp32_ramp": {
+            "episodes": 0,
+            "steps": 0
+          }
+        },
+        "modified_step_share": 0.03524669633791635,
+        "collision_causes": {
+          "backrest->deck": 21
+        }
+      },
+      "paired": {
+        "alone_collisions": 34,
+        "collisions_prevented": 2,
+        "collisions_turned_into_success": 2,
+        "outcome_of_alone_collisions": {
+          "collision": 32,
+          "success": 2
+        },
+        "alone_successes": 966,
+        "successes_lost": 4,
+        "outcome_of_alone_successes": {
+          "success": 962,
+          "collision": 4
+        },
+        "new_collisions": 4,
+        "new_timeouts_or_aborts": 0,
+        "collision_seeds_alone": [
+          10027,
+          10123,
+          10124,
+          10132,
+          10133,
+          10161,
+          10181,
+          10231,
+          10244,
+          10280,
+          10410,
+          10451,
+          10517,
+          10524,
+          10607,
+          10608,
+          10611,
+          10650,
+          10679,
+          10693,
+          10715,
+          10724,
+          10762,
+          10770,
+          10776,
+          10787,
+          10822,
+          10847,
+          10863,
+          10886,
+          10900,
+          10947,
+          10971,
+          10981
+        ]
+      },
+      "paired_proposal": {
+        "alone_collisions": 34,
+        "collisions_prevented": 17,
+        "collisions_turned_into_success": 0,
+        "outcome_of_alone_collisions": {
+          "collision": 17,
+          "aborted": 17
+        },
+        "alone_successes": 966,
+        "successes_lost": 7,
+        "outcome_of_alone_successes": {
+          "success": 959,
+          "collision": 4,
+          "aborted": 3
+        },
+        "new_collisions": 4,
+        "new_timeouts_or_aborts": 20,
+        "collision_seeds_alone": [
+          10027,
+          10123,
+          10124,
+          10132,
+          10133,
+          10161,
+          10181,
+          10231,
+          10244,
+          10280,
+          10410,
+          10451,
+          10517,
+          10524,
+          10607,
+          10608,
+          10611,
+          10650,
+          10679,
+          10693,
+          10715,
+          10724,
+          10762,
+          10770,
+          10776,
+          10787,
+          10822,
+          10847,
+          10863,
+          10886,
+          10900,
+          10947,
+          10971,
+          10981
+        ]
+      }
+    },
+    "low_friction": {
+      "policy": {
+        "episodes": 1000,
+        "success_rate": 0.986,
+        "collision_rate": 0.014,
+        "timeout_rate": 0.0,
+        "safety_abort_rate": 0.0,
+        "out_of_range_rate": 0.0,
+        "mean_time_s": 7.131389452332657,
+        "mean_lateral_mm": 2.7663893042640173,
+        "collision_causes": {
+          "backrest->deck": 9,
+          "mast_r->shelf": 3,
+          "mast_l->shelf": 1,
+          "fork_r->str_c": 1
+        }
+      },
+      "policy+supervisor[front_all]": {
+        "episodes": 1000,
+        "success_rate": 0.988,
+        "collision_rate": 0.012,
+        "timeout_rate": 0.0,
+        "safety_abort_rate": 0.0,
+        "out_of_range_rate": 0.0,
+        "mean_time_s": 7.2050607287449395,
+        "mean_lateral_mm": 2.786848247630552,
+        "interventions": {
+          "proposed_docking_stop": {
+            "episodes": 0,
+            "steps": 0
+          },
+          "jetson_tof_stop": {
+            "episodes": 0,
+            "steps": 0
+          },
+          "jetson_tof_slow": {
+            "episodes": 0,
+            "steps": 0
+          },
+          "jetson_docking_cap": {
+            "episodes": 0,
+            "steps": 0
+          },
+          "jetson_fork_cap": {
+            "episodes": 0,
+            "steps": 0
+          },
+          "jetson_ramp": {
+            "episodes": 1000,
+            "steps": 3000
+          },
+          "esp32_tof_stop": {
+            "episodes": 0,
+            "steps": 0
+          },
+          "esp32_tof_slow": {
+            "episodes": 0,
+            "steps": 0
+          },
+          "esp32_docking_cap": {
+            "episodes": 0,
+            "steps": 0
+          },
+          "esp32_fork_cap": {
+            "episodes": 0,
+            "steps": 0
+          },
+          "esp32_ramp": {
+            "episodes": 0,
+            "steps": 0
+          }
+        },
+        "modified_step_share": 0.020854187520854186,
+        "collision_causes": {
+          "backrest->deck": 9,
+          "mast_l->shelf": 1,
+          "fork_r->str_c": 1,
+          "mast_r->shelf": 1
+        }
+      },
+      "policy+supervisor[front_all+stop@0.02]": {
+        "episodes": 1000,
+        "success_rate": 0.986,
+        "collision_rate": 0.01,
+        "timeout_rate": 0.0,
+        "safety_abort_rate": 0.004,
+        "out_of_range_rate": 0.0,
+        "mean_time_s": 7.207758620689655,
+        "mean_lateral_mm": 2.772607399476175,
+        "interventions": {
+          "proposed_docking_stop": {
+            "episodes": 109,
+            "steps": 389
+          },
+          "jetson_tof_stop": {
+            "episodes": 0,
+            "steps": 0
+          },
+          "jetson_tof_slow": {
+            "episodes": 0,
+            "steps": 0
+          },
+          "jetson_docking_cap": {
+            "episodes": 0,
+            "steps": 0
+          },
+          "jetson_fork_cap": {
+            "episodes": 0,
+            "steps": 0
+          },
+          "jetson_ramp": {
+            "episodes": 1000,
+            "steps": 3309
+          },
+          "esp32_tof_stop": {
+            "episodes": 0,
+            "steps": 0
+          },
+          "esp32_tof_slow": {
+            "episodes": 0,
+            "steps": 0
+          },
+          "esp32_docking_cap": {
+            "episodes": 0,
+            "steps": 0
+          },
+          "esp32_fork_cap": {
+            "episodes": 0,
+            "steps": 0
+          },
+          "esp32_ramp": {
+            "episodes": 0,
+            "steps": 0
+          }
+        },
+        "modified_step_share": 0.02371684117765427,
+        "collision_causes": {
+          "backrest->deck": 9,
+          "fork_r->str_c": 1
+        }
+      },
+      "paired": {
+        "alone_collisions": 14,
+        "collisions_prevented": 3,
+        "collisions_turned_into_success": 3,
+        "outcome_of_alone_collisions": {
+          "collision": 11,
+          "success": 3
+        },
+        "alone_successes": 986,
+        "successes_lost": 1,
+        "outcome_of_alone_successes": {
+          "success": 985,
+          "collision": 1
+        },
+        "new_collisions": 1,
+        "new_timeouts_or_aborts": 0,
+        "collision_seeds_alone": [
+          10123,
+          10124,
+          10296,
+          10302,
+          10607,
+          10633,
+          10635,
+          10640,
+          10650,
+          10693,
+          10724,
+          10840,
+          10852,
+          10971
+        ]
+      },
+      "paired_proposal": {
+        "alone_collisions": 14,
+        "collisions_prevented": 5,
+        "collisions_turned_into_success": 2,
+        "outcome_of_alone_collisions": {
+          "collision": 9,
+          "aborted": 3,
+          "success": 2
+        },
+        "alone_successes": 986,
+        "successes_lost": 2,
+        "outcome_of_alone_successes": {
+          "success": 984,
+          "collision": 1,
+          "aborted": 1
+        },
+        "new_collisions": 1,
+        "new_timeouts_or_aborts": 4,
+        "collision_seeds_alone": [
+          10123,
+          10124,
+          10296,
+          10302,
+          10607,
+          10633,
+          10635,
+          10640,
+          10650,
+          10693,
+          10724,
+          10840,
+          10852,
+          10971
+        ]
+      }
+    }
+  },
+  "wall_clock_min": 6.2
+}

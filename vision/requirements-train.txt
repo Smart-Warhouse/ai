@@ -1,0 +1,7 @@
+# Training / export / synthetic data on the laptop (RTX 4050). Install torch first from the CUDA index:
+#   .venv/Scripts/pip install torch torchvision --index-url https://download.pytorch.org/whl/cu126
+# Versions that produced models/starter_v1 are in models/starter_v1/train_meta.json.
+-r requirements.txt
+ultralytics
+onnxslim
+mujoco

@@ -1,0 +1,8 @@
+# Runtime of forklift_vision (detector, dataset tools) + tests. CPU only, no torch: this is what CI and the
+# ROS 2 node need. On the Jetson keep the system OpenCV / numpy<2 and install onnxruntime-gpu from the Jetson Zoo.
+numpy
+opencv-python-headless
+onnxruntime
+onnx
+PyYAML
+pytest

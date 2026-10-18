@@ -1,0 +1,10 @@
+.venv/
+datasets/
+runs/
+weights/
+*.engine
+yolo11n.pt
+yolov8n.pt
+.ultralytics/
+__pycache__/
+.pytest_cache/

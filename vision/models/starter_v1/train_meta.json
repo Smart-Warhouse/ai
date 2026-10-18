@@ -1,0 +1,16 @@
+{
+  "name": "starter_v1",
+  "base_model": "yolo11n.pt",
+  "data": "datasets\\starter_v1\\data.yaml",
+  "epochs": 40,
+  "imgsz": 640,
+  "batch": 16,
+  "train_minutes": 31.1,
+  "device": "NVIDIA GeForce RTX 4050 Laptop GPU",
+  "versions": {
+    "ultralytics": "8.4.182",
+    "torch": "2.14.1+cu126",
+    "python": "3.11.9"
+  },
+  "finished": "2026-10-18 22:59"
+}

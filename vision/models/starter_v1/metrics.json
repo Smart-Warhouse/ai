@@ -1,0 +1,156 @@
+{
+  "model": "starter_v1",
+  "label": "STARTER MODEL on non-final data (COCO persons + MuJoCo synthetic) \u2014 NOT the PC-08 acceptance result.",
+  "test_split": "C:\\Users\\ASUS\\Desktop\\Grad. Project\\code\\vision\\datasets\\starter_v1\\images\\test",
+  "ultralytics": {
+    "mAP50": 0.8484223856018277,
+    "mAP50_95": 0.7147592392388352,
+    "per_class": {
+      "person": {
+        "precision": 0.8875502235635395,
+        "recall": 0.649197071637278,
+        "mAP50": 0.7701161906338831,
+        "mAP50_95": 0.5665620214041731
+      },
+      "pallet": {
+        "precision": 0.8635874495257689,
+        "recall": 0.7874396135265701,
+        "mAP50": 0.8504575464861057,
+        "mAP50_95": 0.7506680443250224
+      },
+      "forklift": {
+        "precision": 0.9200696705648435,
+        "recall": 0.7943262411347518,
+        "mAP50": 0.8831753515461345,
+        "mAP50_95": 0.7544632236068776
+      },
+      "obstacle": {
+        "precision": 0.8905458825145846,
+        "recall": 0.8068669527896996,
+        "mAP50": 0.8899404537411875,
+        "mAP50_95": 0.7873436676192681
+      }
+    },
+    "note": "precision/recall here are at the max-F1 confidence chosen by Ultralytics"
+  },
+  "onnx": {
+    "conf_thres": 0.25,
+    "nms_iou": 0.7,
+    "match_iou": 0.5,
+    "images": 222,
+    "per_class": {
+      "person": {
+        "tp": 157,
+        "fp": 40,
+        "fn": 74,
+        "precision": 0.7969543147208121,
+        "recall": 0.6796536796536796
+      },
+      "pallet": {
+        "tp": 165,
+        "fp": 44,
+        "fn": 42,
+        "precision": 0.7894736842105263,
+        "recall": 0.7971014492753623
+      },
+      "forklift": {
+        "tp": 113,
+        "fp": 33,
+        "fn": 28,
+        "precision": 0.773972602739726,
+        "recall": 0.8014184397163121
+      },
+      "obstacle": {
+        "tp": 192,
+        "fp": 41,
+        "fn": 41,
+        "precision": 0.8240343347639485,
+        "recall": 0.8240343347639485
+      }
+    },
+    "by_source": {
+      "coco_person": {
+        "person": {
+          "tp": 90,
+          "fp": 36,
+          "fn": 69,
+          "precision": 0.7142857142857143,
+          "recall": 0.5660377358490566
+        },
+        "pallet": {
+          "tp": 0,
+          "fp": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null
+        },
+        "forklift": {
+          "tp": 0,
+          "fp": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null
+        },
+        "obstacle": {
+          "tp": 0,
+          "fp": 0,
+          "fn": 0,
+          "precision": null,
+          "recall": null
+        }
+      },
+      "synth_mujoco": {
+        "person": {
+          "tp": 67,
+          "fp": 4,
+          "fn": 5,
+          "precision": 0.9436619718309859,
+          "recall": 0.9305555555555556
+        },
+        "pallet": {
+          "tp": 165,
+          "fp": 44,
+          "fn": 42,
+          "precision": 0.7894736842105263,
+          "recall": 0.7971014492753623
+        },
+        "forklift": {
+          "tp": 113,
+          "fp": 33,
+          "fn": 28,
+          "precision": 0.773972602739726,
+          "recall": 0.8014184397163121
+        },
+        "obstacle": {
+          "tp": 192,
+          "fp": 41,
+          "fn": 41,
+          "precision": 0.8240343347639485,
+          "recall": 0.8240343347639485
+        }
+      }
+    },
+    "cpu_latency_ms": {
+      "preprocess": {
+        "mean": 4.338529953943787,
+        "p95": 5.504259998997439
+      },
+      "inference": {
+        "mean": 19.70340460817664,
+        "p95": 22.373160000279302
+      },
+      "postprocess": {
+        "mean": 0.5127493088601173,
+        "p95": 0.7422800008498598
+      },
+      "total": {
+        "mean": 24.554683870980547,
+        "p95": 27.92461999852093
+      },
+      "batch": 1,
+      "threads": "onnxruntime default",
+      "cpu": "Intel64 Family 6 Model 186 Stepping 2, GenuineIntel"
+    }
+  },
+  "evaluated": "2026-10-18 23:05"
+}
