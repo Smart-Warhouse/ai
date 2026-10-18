@@ -1,0 +1,16 @@
+# Versions that produced models/docking_v3 (see docs/11-simulation-training.md)
+mujoco==3.16.0
+gymnasium==1.4.0
+stable_baselines3==2.9.0
+torch==2.11.0
+numpy==2.4.4
+PyYAML==6.0.3
+opencv-python-headless==5.0.0.93
+pillow==12.2.0
+imageio==2.38.1
+imageio-ffmpeg==0.6.0
+onnx==1.23.2
+onnxruntime==1.24.4
+onnxscript==0.7.2
+tensorboard==2.21.0
+pytest==9.1.1

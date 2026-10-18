@@ -125,5 +125,20 @@
     "name": "PPO 624,960 steps",
     "path": "models\\docking_v3\\checkpoints\\ppo_624960_steps.zip",
     "rule": "max(success \u2212 2\u00b7collision) on seeds 20000-20399"
+  },
+  "onnx": {
+    "file": "policy.onnx",
+    "bytes": 78487,
+    "opset": 17,
+    "input": "obs float32 [N,18]",
+    "output": "action float32 [N,3] in [-1,1]",
+    "source": "policy_selected.zip",
+    "max_abs_diff_vs_torch": 5.811452865600586e-07,
+    "max_abs_diff_vs_sb3_predict": 5.364418029785156e-07,
+    "sim_200_episodes": {
+      "success_rate": 0.99,
+      "collision_rate": 0.01
+    },
+    "cpu_latency_ms": 0.0094
   }
 }

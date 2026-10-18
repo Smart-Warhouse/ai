@@ -6,12 +6,13 @@ PPO training (requirements §8). Design, research and results: `../../docs/11-si
 ```bash
 cd code/training
 python -m venv --system-site-packages .venv          # reuses an installed torch if present
-.venv/Scripts/pip install mujoco gymnasium stable-baselines3 imageio imageio-ffmpeg tensorboard pytest opencv-python-headless pillow pyyaml
+.venv/Scripts/pip install -r requirements.txt
 
 .venv/Scripts/python -m pytest -q tests                               # env + baseline tests
 .venv/Scripts/python scripts/eval_baseline.py                         # classical controller, 1000 episodes
 .venv/Scripts/python scripts/train_ppo.py --steps 3000000 --curriculum # → models/docking_vN/
 .venv/Scripts/tensorboard --logdir runs
+.venv/Scripts/python scripts/export_onnx.py models/docking_v3/policy_selected.zip   # → policy.onnx (AI-05)
 .venv/Scripts/python scripts/record_video.py --model models/docking_v2/policy.zip --out out/docking_demo.mp4
 ```
 
