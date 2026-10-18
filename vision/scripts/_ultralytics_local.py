@@ -1,4 +1,4 @@
-"""Import before Ultralytics: keeps its settings, downloads and runs inside code/vision.
+"""Import before Ultralytics: keeps its settings, downloads and runs inside ai/vision.
 
 Without this Ultralytics writes a global settings file whose weights/runs folders default to the git root
 (it downloaded yolo26n.pt for its AMP check into the repo root) and enables anonymous usage sync.

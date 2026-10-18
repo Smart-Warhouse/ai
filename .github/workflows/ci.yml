@@ -1,0 +1,46 @@
+name: ci
+# Repos of the Smart-Warhouse org live side by side in one workspace folder (docs/ backend/ dashboard/ landing/
+# mobile/ robot/ ai/). Jobs that need a sibling check it out next to this repo, so relative lookups work as on a laptop.
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  training:
+    # tests also read the firmware safety limiter and the Jetson safety supervisor from the robot repo
+    runs-on: ubuntu-latest
+    defaults: { run: { working-directory: ai/training } }
+    steps:
+      - uses: actions/checkout@v4
+        with: { path: ai }
+      - uses: actions/checkout@v4
+        with: { repository: Smart-Warhouse/robot, path: robot }
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: |
+            ai/training/requirements.txt
+      - run: pip install --extra-index-url https://download.pytorch.org/whl/cpu -r requirements.txt
+      - run: python -m pytest -q tests
+
+  vision:
+    runs-on: ubuntu-latest
+    defaults: { run: { working-directory: ai/vision } }
+    steps:
+      - uses: actions/checkout@v4
+        with: { path: ai }
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: |
+            ai/vision/requirements*.txt
+      - run: pip install --extra-index-url https://download.pytorch.org/whl/cpu -r requirements-train.txt
+      - run: python -m pytest -q tests   # CPU only, no dataset download

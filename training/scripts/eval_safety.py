@@ -247,7 +247,7 @@ def main() -> None:
         "requirement": "AI-06: every policy command passes the safety supervisor (0.1 m/s, ToF) before the ESP32",
         "model": "models/docking_v3/policy.onnx (onnxruntime, CPU)",
         "seeds": f"{SEED0}-{SEED0 + args.episodes - 1}",
-        "layers": {"jetson": "code/ros2_ws/src/forklift_safety/forklift_safety/safety_core.py (imported as is)",
+        "layers": {"jetson": "robot repo ros2_ws/src/forklift_safety/forklift_safety/safety_core.py (imported as is)",
                    "esp32": "forklift_rl/firmware_limiter.py (port of lib/forklift_core, checked against the C++ in "
                             "tests/test_firmware_limiter.py)"},
         "docking_masks": {

@@ -1,7 +1,7 @@
 """Synthetic `pallet` / `forklift` / `obstacle` images rendered with MuJoCo, boxes taken from the segmentation
 render (pixel-exact, occlusion-aware), optional COCO person cut-outs pasted in (see fetch_coco_persons.py).
 
-The scene re-uses the 1:14 dimensions of code/training/forklift_rl/config.yaml (read only): forklifts, pallets
+The scene re-uses the 1:14 dimensions of ai/training/forklift_rl/config.yaml (read only): forklifts, pallets
 with a load and the DICT_4X4_50 marker, racks (unlabelled distractors), floor tape, walls, and obstacles
 (boxes, cans, balls, traffic cones). Every object is a mocap body, so one compiled scene renders many frames:
 per frame the camera pose (fork-carriage heights), field of view, object poses/colours and the light level

@@ -1,4 +1,4 @@
-"""The Python port of the ESP32 drive limiter must behave exactly like code/firmware/lib/forklift_core.
+"""The Python port of the ESP32 drive limiter must behave exactly like robot/firmware/lib/forklift_core.
 
 1. constants are parsed out of config.h;
 2. the firmware's native ToF / docking / raised-fork tests (test/test_safety/test_safety.cpp) replayed on the port;
@@ -12,6 +12,7 @@ import re
 import shutil
 import subprocess
 import sys
+import os
 from pathlib import Path
 
 import numpy as np
@@ -19,7 +20,8 @@ import pytest
 
 from forklift_rl import firmware_limiter as fw
 
-FW = Path(__file__).resolve().parents[2] / "firmware" / "lib" / "forklift_core" / "src"
+WORKSPACE = Path(os.environ["SW_WORKSPACE"]) if os.environ.get("SW_WORKSPACE") else Path(__file__).resolve().parents[3]  # holds the ai and robot repos
+FW = WORKSPACE / "robot" / "firmware" / "lib" / "forklift_core" / "src"
 CONFIG_H = FW / "forklift" / "config.h"
 
 

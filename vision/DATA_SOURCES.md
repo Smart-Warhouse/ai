@@ -3,7 +3,7 @@
 The starter model is trained on **non-final data**: COCO photographs of full-size people and MuJoCo renders of
 the 1:14 scene. It exists so the pipeline (dataset → train → ONNX → wrapper → ROS 2 node) runs end-to-end
 before the forklift camera is mounted. It is **not** the PC-08 result; the final model is trained on ≥ 400
-images per class from the forklift camera (plan.md B6, [docs/16-vision.md](../../docs/16-vision.md)).
+images per class from the forklift camera (plan.md B6, [docs/16-vision.md](https://github.com/Smart-Warhouse/docs/blob/main/16-vision.md)).
 
 Nothing in `datasets/` is committed (gitignored); every step below regenerates it.
 
@@ -32,7 +32,7 @@ Two disjoint image sets:
 | | |
 |---|---|
 | Generator | `scripts/make_synthetic.py --n 1800 --person-prob 0.35` (seed 14), own code, same licence as this repo |
-| Geometry | 1:14 forklift and pallet dimensions read from `code/training/forklift_rl/config.yaml` (PLACEHOLDERS until ME-01); pallet with load box and a DICT_4X4_50 id 7 marker; racks, floor tape, walls as unlabelled distractors; obstacles = boxes, cans, balls, traffic cones, piles of small boxes |
+| Geometry | 1:14 forklift and pallet dimensions read from `ai/training/forklift_rl/config.yaml` (PLACEHOLDERS until ME-01); pallet with load box and a DICT_4X4_50 id 7 marker; racks, floor tape, walls as unlabelled distractors; obstacles = boxes, cans, balls, traffic cones, piles of small boxes |
 | Randomised per frame | camera height 0.03–0.6 m (70 % at fork-carriage height ≤ 0.22 m), pitch 2–45° down, vertical FOV 38–56°, object poses/colours, light level dim / normal / bright (PC-11; 501 / 778 / 521 frames), motion blur, sensor noise, JPEG quality 60–95 |
 | Per scene (60 frames) | floor texture and colours, skybox, pallet scale ×0.85–1.25, obstacle shapes |
 | Labels | from MuJoCo's segmentation render (separate context without MSAA, floor reflections off): tight box of the **visible** pixels of each object, ≥ 30 px and ≥ 4 px per side; the pallet box includes its load |

@@ -4,7 +4,7 @@ MuJoCo + Gymnasium environment of the 1:14 forklift docking into a pallet, a cla
 PPO training (requirements §8). Design, research and results: `../../docs/11-simulation-training.md`.
 
 ```bash
-cd code/training
+cd ai/training
 python -m venv --system-site-packages .venv          # reuses an installed torch if present
 .venv/Scripts/pip install -r requirements.txt
 

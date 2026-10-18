@@ -1,4 +1,4 @@
-"""Python port of the ESP32 drive limiter (code/firmware/lib/forklift_core: safety_limiter.cpp + the normal-driving
+"""Python port of the ESP32 drive limiter (robot/firmware/lib/forklift_core: safety_limiter.cpp + the normal-driving
 part of SafetyStateMachine::update), so the simulator can run the SAME last safety layer as the robot (AI-06, FW-07).
 
 Ported 1:1, names kept: `direction_of`, `evaluate_tof`, `speed_cap`, `ramp_speed`, and `DriveLimiter.update` =

@@ -21,6 +21,7 @@ from __future__ import annotations
 import math
 import sys
 from collections import Counter
+import os
 from pathlib import Path
 
 import gymnasium as gym
@@ -28,7 +29,8 @@ import numpy as np
 
 from . import firmware_limiter as fw
 
-_SAFETY_PKG = Path(__file__).resolve().parents[2] / "ros2_ws" / "src" / "forklift_safety"
+_WORKSPACE = Path(os.environ["SW_WORKSPACE"]) if os.environ.get("SW_WORKSPACE") else Path(__file__).resolve().parents[3]  # holds the ai and robot repos
+_SAFETY_PKG = _WORKSPACE / "robot" / "ros2_ws" / "src" / "forklift_safety"
 if str(_SAFETY_PKG) not in sys.path:
     sys.path.insert(0, str(_SAFETY_PKG))
 from forklift_safety import safety_core as sc  # noqa: E402  (rclpy-free core)

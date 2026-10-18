@@ -2,8 +2,8 @@
 
 YOLO detector for the fork-carriage camera: classes `person`, `pallet`, `forklift`, `obstacle` (PC-06, in that
 order = class ids 0–3), input 640×640, TensorRT FP16 on the Jetson Orin Nano Super. It runs next to the ArUco
-layer (`code/ros2_ws/src/forklift_perception`): ArUco gives the pallet pose, YOLO feeds SF-06 (person within
-1 m → slow / stop). Design, data-collection protocol and acceptance tests: [docs/16-vision.md](../../docs/16-vision.md).
+layer (`robot/ros2_ws/src/forklift_perception`): ArUco gives the pallet pose, YOLO feeds SF-06 (person within
+1 m → slow / stop). Design, data-collection protocol and acceptance tests: [docs/16-vision.md](https://github.com/Smart-Warhouse/docs/blob/main/16-vision.md).
 Data provenance and licences: [DATA_SOURCES.md](DATA_SOURCES.md).
 
 > `models/starter_v1` is a **starter model on non-final data** (COCO persons + MuJoCo renders). It proves the
@@ -12,7 +12,7 @@ Data provenance and licences: [DATA_SOURCES.md](DATA_SOURCES.md).
 ## Setup
 
 ```bash
-cd code/vision
+cd ai/vision
 python -m venv .venv                                    # Python 3.11 (3.12 install on this laptop is broken)
 .venv/Scripts/pip install torch torchvision --index-url https://download.pytorch.org/whl/cu126   # RTX 4050
 .venv/Scripts/pip install -r requirements-train.txt     # Ultralytics, MuJoCo, onnxruntime, pytest
@@ -72,8 +72,8 @@ python scripts/bench_onnx.py models/starter_v1/starter_v1.onnx
 
 `--workers 0`: on this laptop (16 GB, several sessions open) Windows dataloader workers ran out of commit memory.
 
-The scripts keep Ultralytics' settings in `code/vision/.ultralytics/` (weights, runs, datasets under
-`code/vision`, usage sync off) instead of the global `%APPDATA%/Ultralytics` file, whose defaults point at the
+The scripts keep Ultralytics' settings in `ai/vision/.ultralytics/` (weights, runs, datasets under
+`ai/vision`, usage sync off) instead of the global `%APPDATA%/Ultralytics` file, whose defaults point at the
 git root (`scripts/_ultralytics_local.py`).
 
 ## Wrapper API (for the ROS 2 node)
