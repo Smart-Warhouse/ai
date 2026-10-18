@@ -1,0 +1,68 @@
+# Pallet-docking environment parameters (requirements §8 "مهمة الالتقاط", AI-01..AI-04).
+# Units: metres, seconds, radians unless the key says otherwise.
+# Dimensions are PLACEHOLDERS until the forklift is opened and measured (ME-01) — update them here only.
+
+forklift:
+  wheelbase: 0.20            # front (drive) axle → rear (steer) axle
+  body_length: 0.30          # chassis behind the front axle
+  body_width: 0.187          # Huina 1577 Pro outer width
+  mast_height: 0.317
+  carriage_x: 0.03           # fork carriage, ahead of the front axle
+  fork_length: 0.18
+  fork_width: 0.035
+  fork_thickness: 0.012
+  fork_spacing: 0.09         # centre-to-centre
+  fork_clearance: 0.004      # fork bottom above the floor at lift = 0
+  lift_max: 0.12
+
+pallet:
+  depth: 0.20
+  width: 0.20
+  height: 0.035
+  deck_thickness: 0.008
+  stringer_width: 0.02       # three stringers → two fork openings
+  mass: 0.25
+  marker_size: 0.03          # ArUco DICT_4X4_50, 30 mm (PC-03)
+  marker_id: 7
+
+control:
+  rate_hz: 20                # policy rate (AI-05: 20 Hz on the Jetson)
+  physics_dt: 0.002
+  v_max: 0.10                # docking speed limit (SF-03, AI-06)
+  steer_max_deg: 30
+  lift_rate: 0.05            # m/s at full lift command
+  actuator_tau: 0.08         # first-order lag of drive/steer response
+  max_steps: 300             # 15 s episode
+
+task:
+  start_distance: [0.30, 0.60]   # fork tips → pallet face
+  start_lateral: [-0.10, 0.10]
+  start_yaw_deg: [-20, 20]
+  pallet_elevation: [0.0, 0.06]  # floor or rack level 2 (60 mm), chosen per episode
+  success_insertion: 0.80        # fraction of fork length inside the pallet
+  success_lateral: 0.01          # ≤ 1 cm (NFR-02)
+  pallet_moved_limit: 0.01       # pallet pushed > 1 cm = collision
+  out_of_range: 1.0
+
+randomization:                    # AI-03
+  floor_friction: [0.6, 1.2]
+  motor_delay_ms: [20, 80]
+  aruco_noise_m: 0.005            # per-frame noise (± 5 mm)
+  aruco_noise_rad: 0.017          # ± 1°
+  aruco_bias_m: 0.003             # per-episode calibration bias
+  wheel_slip: [0.90, 1.05]        # actual / commanded speed
+  steer_bias_deg: [-1.5, 1.5]
+  pallet_load_kg: [0.0, 0.4]
+  camera_fov_deg: 70              # marker only measured inside this cone
+  marker_min_range: 0.06          # too close to read the marker → dead-reckoning
+
+reward:
+  progress: 10.0
+  lateral: 50.0             # per metre of lateral error removed
+  heading: 2.0
+  height: 40.0              # per metre of fork-height error removed
+  step: -0.01
+  steer_change: -0.05
+  success: 100.0
+  collision: -100.0
+  out_of_range: -50.0

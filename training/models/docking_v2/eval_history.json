@@ -1,0 +1,34 @@
+[
+  {
+    "episodes": 100,
+    "success_rate": 0.99,
+    "collision_rate": 0.01,
+    "mean_time_s": 6.867676767676768,
+    "mean_lateral_mm": 2.783756810070767,
+    "timesteps": 250000
+  },
+  {
+    "episodes": 100,
+    "success_rate": 0.96,
+    "collision_rate": 0.04,
+    "mean_time_s": 6.31875,
+    "mean_lateral_mm": 2.433645834854279,
+    "timesteps": 500000
+  },
+  {
+    "episodes": 100,
+    "success_rate": 0.94,
+    "collision_rate": 0.06,
+    "mean_time_s": 6.331382978723404,
+    "mean_lateral_mm": 2.9480374265482765,
+    "timesteps": 750000
+  },
+  {
+    "episodes": 100,
+    "success_rate": 0.91,
+    "collision_rate": 0.09,
+    "mean_time_s": 6.331318681318681,
+    "mean_lateral_mm": 2.171528146097583,
+    "timesteps": 1000000
+  }
+]

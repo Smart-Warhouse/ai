@@ -1,0 +1,129 @@
+{
+  "version": "v3",
+  "trained_at": "2026-10-18T14:32:00.602338+00:00",
+  "timesteps": 1000000,
+  "envs": 16,
+  "seed": 0,
+  "curriculum": false,
+  "learning_rate": 3e-05,
+  "clip_range": 0.1,
+  "target_kl": 0.01,
+  "behaviour_cloning": {
+    "demo_episodes": 3200,
+    "demo_steps": 691889,
+    "demo_success": 0.8896875,
+    "bc_only_eval": {
+      "episodes": 200,
+      "success_rate": 0.9,
+      "collision_rate": 0.0,
+      "mean_time_s": 9.850555555555555,
+      "mean_lateral_mm": 1.7049621781444895
+    }
+  },
+  "wall_clock_min": 12.1,
+  "eval_1000": {
+    "episodes": 1000,
+    "success_rate": 0.986,
+    "collision_rate": 0.014,
+    "mean_time_s": 6.410141987829614,
+    "mean_lateral_mm": 2.7465406179308287
+  },
+  "ai04_gate_passed": true,
+  "validation": [
+    {
+      "episodes": 400,
+      "success_rate": 0.875,
+      "collision_rate": 0.0,
+      "mean_time_s": 9.968285714285715,
+      "mean_lateral_mm": 1.5941935463696264,
+      "name": "imitation only",
+      "path": "models\\docking_v3\\policy_bc.zip"
+    },
+    {
+      "episodes": 400,
+      "success_rate": 0.9675,
+      "collision_rate": 0.0325,
+      "mean_time_s": 8.084625322997416,
+      "mean_lateral_mm": 2.3097586171374025,
+      "name": "PPO 124,992 steps",
+      "path": "models\\docking_v3\\checkpoints\\ppo_124992_steps.zip"
+    },
+    {
+      "episodes": 400,
+      "success_rate": 0.985,
+      "collision_rate": 0.015,
+      "mean_time_s": 7.378426395939087,
+      "mean_lateral_mm": 2.5515586967431685,
+      "name": "PPO 249,984 steps",
+      "path": "models\\docking_v3\\checkpoints\\ppo_249984_steps.zip"
+    },
+    {
+      "episodes": 400,
+      "success_rate": 0.975,
+      "collision_rate": 0.025,
+      "mean_time_s": 6.972948717948717,
+      "mean_lateral_mm": 2.7021575657989767,
+      "name": "PPO 374,976 steps",
+      "path": "models\\docking_v3\\checkpoints\\ppo_374976_steps.zip"
+    },
+    {
+      "episodes": 400,
+      "success_rate": 0.975,
+      "collision_rate": 0.025,
+      "mean_time_s": 6.6146153846153855,
+      "mean_lateral_mm": 2.9709148809267587,
+      "name": "PPO 499,968 steps",
+      "path": "models\\docking_v3\\checkpoints\\ppo_499968_steps.zip"
+    },
+    {
+      "episodes": 400,
+      "success_rate": 0.9925,
+      "collision_rate": 0.0075,
+      "mean_time_s": 6.384508816120906,
+      "mean_lateral_mm": 2.8495869444917528,
+      "name": "PPO 624,960 steps",
+      "path": "models\\docking_v3\\checkpoints\\ppo_624960_steps.zip"
+    },
+    {
+      "episodes": 400,
+      "success_rate": 0.9725,
+      "collision_rate": 0.0275,
+      "mean_time_s": 6.355012853470437,
+      "mean_lateral_mm": 2.535513793456433,
+      "name": "PPO 749,952 steps",
+      "path": "models\\docking_v3\\checkpoints\\ppo_749952_steps.zip"
+    },
+    {
+      "episodes": 400,
+      "success_rate": 0.9625,
+      "collision_rate": 0.0375,
+      "mean_time_s": 6.296493506493507,
+      "mean_lateral_mm": 2.266189909059474,
+      "name": "PPO 874,944 steps",
+      "path": "models\\docking_v3\\checkpoints\\ppo_874944_steps.zip"
+    },
+    {
+      "episodes": 400,
+      "success_rate": 0.9425,
+      "collision_rate": 0.0575,
+      "mean_time_s": 6.308090185676392,
+      "mean_lateral_mm": 2.2409159065584037,
+      "name": "PPO 999,936 steps",
+      "path": "models\\docking_v3\\checkpoints\\ppo_999936_steps.zip"
+    },
+    {
+      "episodes": 400,
+      "success_rate": 0.95,
+      "collision_rate": 0.05,
+      "mean_time_s": 6.301315789473684,
+      "mean_lateral_mm": 2.2405247859749773,
+      "name": "PPO end of training",
+      "path": "models\\docking_v3\\policy.zip"
+    }
+  ],
+  "selected": {
+    "name": "PPO 624,960 steps",
+    "path": "models\\docking_v3\\checkpoints\\ppo_624960_steps.zip",
+    "rule": "max(success \u2212 2\u00b7collision) on seeds 20000-20399"
+  }
+}

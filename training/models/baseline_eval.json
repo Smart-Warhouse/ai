@@ -1,0 +1,8 @@
+{
+  "controller": "baseline",
+  "episodes": 1000,
+  "success_rate": 0.9,
+  "collision_rate": 0.0,
+  "mean_time_s": 10.3025,
+  "mean_lateral_mm": 1.6727874756589176
+}
